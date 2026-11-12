@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Write an Email Practice</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Merriweather:wght@700&display=swap">
+<style>
+/* Layout: teal test bar → index of email tasks grouped by purpose → test-style task screen with a 7-minute timer */
+:root{
+  --teal:#2f6b70; --teal-dark:#24575b; --teal-soft:#e4efef;
+  --bg:#f6f8f8; --surface:#ffffff; --panel:#f2f5f5; --fg:#16201f; --muted:#5a6b6a; --line:#2b3332; --rule:#d3dddc;
+  --ok:#1f8a4c; --ok-bg:#e6f5ec; --bad:#c0392b; --bad-bg:#fbeaea;
+  --f-ui:"Open Sans","Segoe UI",Arial,sans-serif; --f-head:"Merriweather",Georgia,serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --teal:#5fa5aa; --teal-dark:#7cbcc0; --teal-soft:#1d3335; --bg:#0f1716; --surface:#172221; --panel:#141e1d; --fg:#e4ecea; --muted:#9db0ae; --line:#6d807e; --rule:#2c3d3c;
+  --ok:#55c486; --ok-bg:#163327; --bad:#ef7b6e; --bad-bg:#3a1c19; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --teal:#5fa5aa; --teal-dark:#7cbcc0; --teal-soft:#1d3335; --bg:#0f1716; --surface:#172221; --panel:#141e1d; --fg:#e4ecea; --muted:#9db0ae; --line:#6d807e; --rule:#2c3d3c;
+  --ok:#55c486; --ok-bg:#163327; --bad:#ef7b6e; --bad-bg:#3a1c19; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-ui);font-size:16px}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:#2f6b70}
+.topbar{background:#2f6b70;color:#fff;position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.topbar .in{display:flex;align-items:center;gap:12px;min-height:60px;flex-wrap:wrap;padding-block:8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.brand{background:#3d7f84;border-radius:22px;padding:7px 15px;font-weight:600;white-space:nowrap;font-size:15px}
+.ttl{font-weight:700;white-space:nowrap}.sp{flex:1}
+.nb{border:2px solid #cfe0e1;background:transparent;color:#fff;border-radius:11px;padding:8px 16px;font-weight:700;white-space:nowrap}
+.nb:hover{background:#24575b}.nb.next{background:#fff;color:#2f6b70;border-color:#fff}.nb:disabled{opacity:.4;cursor:default}
+.subbar{display:flex;align-items:center;gap:6px 14px;flex-wrap:wrap;border-bottom:2px solid var(--line);background:var(--surface);padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.subbar[hidden]{display:none}
+.subbar .sec{font-size:20px;font-weight:600}.subbar .sepr{color:var(--muted)}.subbar .qn{font-weight:600}
+.timer{font-weight:700;font-variant-numeric:tabular-nums}.timer.low{color:var(--bad)}
+.link{background:none;border:none;color:var(--teal);font-weight:600;padding:4px}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 60px}
+
+/* index */
+.hero{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:end;justify-content:space-between;margin-bottom:22px}
+.hero h1{font-family:var(--f-head);font-size:clamp(26px,4vw,36px);margin:0 0 6px;text-wrap:balance}
+.hero p{margin:0;color:var(--muted);max-width:62ch;line-height:1.5}
+.tally{display:flex;gap:18px;font-variant-numeric:tabular-nums}
+.tally div{text-align:right}.tally b{display:block;font-size:26px;color:var(--teal)}
+.tally span{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.jump{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 30px}
+.jump a{color:var(--teal);background:var(--teal-soft);border-radius:20px;padding:6px 14px;text-decoration:none;font-weight:600;font-size:14px}
+.group{margin-bottom:34px;scroll-margin-top:80px}
+.ghead{display:flex;align-items:baseline;gap:12px;border-bottom:2px solid var(--fg);padding-bottom:8px;margin-bottom:14px;flex-wrap:wrap}
+.ghead h2{margin:0;font-size:22px}.ghead .gd{color:var(--muted);font-size:14px}
+.ghead .gc{margin-left:auto;font-size:13px;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.card{display:flex;flex-direction:column;gap:6px;text-align:left;background:var(--surface);border:1.5px solid var(--rule);border-radius:10px;padding:14px 16px;min-width:0}
+.card:hover{border-color:var(--teal)}
+.card .k{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--teal)}
+.card .t{font-weight:700;font-size:16px;line-height:1.3}
+.card .m{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);margin-top:auto;padding-top:4px;gap:8px}
+.pill{border-radius:12px;padding:2px 9px;font-weight:700;font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill.new{background:var(--teal-soft);color:var(--teal)}.pill.draft{background:var(--panel);color:var(--muted);border:1px solid var(--rule)}.pill.done{background:var(--ok-bg);color:var(--ok)}
+
+/* task */
+.crumbs{font-size:14px;color:var(--muted);margin-bottom:6px}
+.instr{text-align:center;font-size:clamp(24px,3.2vw,32px);font-weight:600;margin:6px 0 24px}
+.wgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:32px;align-items:start}
+.prompt{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:20px 24px;font-size:17px;line-height:1.6}
+.prompt p{margin:0 0 14px}.prompt ul{margin:0 0 14px;padding-left:22px}.prompt li{margin-bottom:6px}
+.note{background:var(--teal-soft);border-radius:8px;padding:10px 14px;font-size:15px;line-height:1.5}
+.resp h3{margin:0 0 10px;font-size:18px}
+.meta{font-size:16px;margin:0 0 6px;font-weight:600}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px;border:1px solid var(--rule);border-bottom:3px solid var(--teal);border-radius:10px 10px 0 0;padding:9px 12px;background:var(--surface)}
+.tbtn{border:none;border-radius:8px;padding:7px 14px;font-size:14px;font-weight:600;background:var(--panel);color:var(--fg)}
+.tbtn:hover{background:var(--teal-soft)}
+.tbtn.on{background:var(--teal);color:var(--bg)}
+.wc{margin-left:auto;color:var(--teal);font-weight:700;font-variant-numeric:tabular-nums;font-size:14px;display:flex;gap:8px;align-items:center}
+textarea{display:block;width:100%;min-height:360px;resize:vertical;border:1px solid var(--rule);border-top:none;border-radius:0 0 10px 10px;padding:14px;font:16px/1.6 var(--f-ui);background:var(--surface);color:var(--fg)}
+textarea:focus{outline:2px solid var(--teal);outline-offset:-2px}
+textarea[readonly]{background:var(--panel)}
+.fb{margin-top:12px;padding:12px 16px;border-radius:10px;font-size:15px;line-height:1.5;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.fb.bad{background:var(--bad-bg);border-left:6px solid var(--bad)}
+.fb.info{background:var(--teal-soft);border-left:6px solid var(--teal)}
+.sbtn{border:2px solid var(--teal);background:transparent;color:var(--teal);border-radius:9px;padding:6px 14px;font-weight:700;font-size:14px}
+.sbtn.fill{background:var(--teal);color:var(--bg)}
+.startcard{display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+
+@media (max-width:860px){
+  .ttl{display:none}.nb{padding:7px 12px;font-size:15px}
+  .wgrid{grid-template-columns:1fr;gap:20px}
+  .prompt{font-size:16px;padding:16px 18px}
+  textarea{min-height:280px}
+}
+@media (prefers-reduced-motion:no-preference){.card{transition:border-color .15s}}
+</style>
+</head>
+<body>
+
+
+<header class="topbar"><div class="in">
+  <span class="brand">The Secret TOEFL Society</span>
+  <span class="ttl">Write an Email</span>
+  <span class="sp"></span>
+  <button class="nb" type="button" id="idxBtn">☰ Index</button>
+  <button class="nb" type="button" id="prevBtn">‹ Back</button>
+  <button class="nb next" type="button" id="nextBtn">Next ›</button>
+</div></header>
+<div class="subbar" id="subbar" hidden>
+  <span class="sec">Writing</span><span class="sepr">|</span><span class="qn" id="qn"></span>
+  <span class="sp"></span>
+  <span class="timer" id="timer"></span>
+  <button class="link" type="button" id="hideTime">Hide Time</button>
+</div>
+<main class="wrap" id="app"></main>
+
+<script>
+const DATA = {"groups": [["problem", "Reporting a Problem", "Something went wrong: describe it, explain the effect, ask for a fix"], ["feedback", "Feedback & Suggestions", "Share what was good, what wasn't, and how to improve it"], ["request", "Requests & Inquiries", "Ask for information, help or arrangements"], ["plans", "Invitations & Plans", "Invite people or share plans and details"], ["advice", "Advice to a Friend", "Support a friend with your experience and tips"]], "tasks": [{"g": "problem", "title": "Damaged Library Book", "sit": "You are a student who recently borrowed a book from the university library. Unfortunately, you accidentally damaged the book. You want to inform the librarian, Mr. Anderson, about the incident and inquire about the steps you need to take to resolve the situation.", "who": "Write an email to Mr. Anderson. In your email, do the following:", "b": ["Describe the incident that caused the book damage and the extent of the damage to the book.", "Explain your concern about the consequences for damaging the book.", "Ask about the steps you should take to resolve the situation."], "to": "Mr. Anderson", "subj": "Damaged library book", "extra": null}, {"g": "problem", "title": "Printer Malfunction", "sit": "You are an employee at a company and have discovered that the printer keeps malfunctioning. You need to request assistance from the IT department to resolve the problem.", "who": "Write an email to the IT support team. In your email, do the following:", "b": ["Describe the issues you have been experiencing with the printer.", "Explain how these issues are impacting your work.", "Ask for a technician to visit and fix the printer as soon as possible."], "to": "IT Support Team", "subj": "Printer malfunction issues", "extra": null}, {"g": "problem", "title": "Damaged Kitchen Appliance", "sit": "You recently purchased a set of kitchen appliances online, but one of the items arrived damaged. You would like to contact the company to report the issue and request a replacement.", "who": "Write an email to the company's customer service department. In your email, do the following:", "b": ["Describe your order and the problem you encountered.", "Explain how the issue has affected you.", "Request a replacement."], "to": "support@kitchencenter.com", "subj": "Request for Replacement of Damaged Item", "extra": null}, {"g": "problem", "title": "Apartment Repairs", "sit": "You are a university student who has recently moved into a new apartment. You have noticed some issues with the apartment. You want to inform your landlord, Mr. Thompson, about these problems.", "who": "Write an email to Mr. Thompson. In your email, do the following:", "b": ["Describe the issues you have encountered in the apartment.", "Explain how conditions negatively affect your studies.", "Request that he make arrangements to address these issues soon."], "to": "Mr. Thompson", "subj": "Request for apartment repairs", "extra": null}, {"g": "problem", "title": "Coastal Retreat Hotel Room", "sit": "You recently stayed at a hotel called 'Coastal Retreat' during your vacation. While you were generally satisfied with the service, there were several problems with the room's features and overall condition. You want to inform the hotel manager, Mr. Rodriguez, about these issues.", "who": "Write an email to Mr. Rodriguez. In your email, do the following:", "b": ["Describe the issues you encountered with the room.", "Explain how these issues affected your stay.", "Request some form of compensation for the inconvenience caused."], "to": "Mr. Rodriguez", "subj": "Issues with hotel room", "extra": null}, {"g": "problem", "title": "Park Maintenance", "sit": "You are a member of the neighborhood association, and you have noticed that the local park needs some maintenance. You decide to contact the association president, Mr. Williams, to discuss the issues and offer a suggestion.", "who": "Write an email to Mr. Williams. In your email, do the following:", "b": ["Describe the maintenance issue you have observed in the park.", "Explain why it is important to address the issue.", "Make a suggestion for how to deal with the issue."], "to": "Mr. Williams", "subj": "Concern about park maintenance", "extra": null}, {"g": "feedback", "title": "Career Workshop", "sit": "You recently attended a university-sponsored career workshop and found the information on job hunting very helpful. However, there were some issues with the workshop organization. You want to follow up with the organizer, Ms. Williams, to express your appreciation for the event and provide feedback on the workshop organization.", "who": "Write an email to Ms. Williams. In your email, do the following:", "b": ["Explain what you found especially helpful about the workshop.", "Describe the problems you found with the workshop organization.", "Suggest ways to avoid these issues in future events."], "to": "Ms. Williams", "subj": "Career Workshop", "extra": null}, {"g": "feedback", "title": "New Café Near Campus", "sit": "You recently visited a new café that opened near campus. You enjoyed your visit overall, but you found the selection of pastries limited. You want to write to the owner, Mr. Garcia, to share your impressions and make a suggestion.", "who": "Write an email to Mr. Garcia. In your email, do the following:", "b": ["Describe what you enjoyed about the café.", "Explain the problem with the pastry selection.", "Suggest some options the café could add to its menu."], "to": "Mr. Garcia", "subj": "Pastry Selection at Your Café", "extra": null}, {"g": "feedback", "title": "Hotel Stay Feedback", "sit": "You recently stayed at a hotel during a campus visit. While you generally liked the room, there were some issues with the room during your stay. You need to provide feedback to the hotel manager, Ms. Thompson, and suggest improvements.", "who": "Write an email to Ms. Thompson. In your email, do the following:", "b": ["Describe what you enjoyed about your stay.", "Explain the issues you had with the room and stay.", "Suggest ways that the hotel could make a guest's stay more peaceful."], "to": "Ms. Thompson", "subj": "Feedback on Hotel Stay", "extra": null}, {"g": "feedback", "title": "Gym Equipment", "sit": "You are a member of a local gym called Fitness Zone. Recently, you have noticed that some of the exercise equipment is problematic. You want to suggest this to the gym manager, Ms. Taylor.", "who": "Write an email to Ms. Taylor. In your email, do the following:", "b": ["Describe the issues you have noticed with the current equipment.", "Provide reasons for why adding new equipment would improve the gym experience.", "Explain the consequences on membership of not improving the services."], "to": "Ms. Taylor", "subj": "Suggestion for updating gym equipment", "extra": null}, {"g": "feedback", "title": "Recycling Awareness Event", "sit": "You recently joined a student organization at your university that focuses on environmental conservation. The group is planning an upcoming event to raise awareness about recycling and reducing waste. You have some ideas for activities and would like to share them with the group leader, Julia.", "who": "Write an email to Julia. In your email, do the following:", "b": ["Describe your ideas for the awareness event.", "Explain why you believe these activities will be effective.", "Offer to help organize and implement the activities."], "to": "Julia", "subj": "Ideas for recycling awareness event", "extra": null}, {"g": "feedback", "title": "Company Reception Area", "sit": "There have been several complaints about the reception area where visitors to your company arrive. Your manager has asked you to suggest how the reception area could be improved.", "who": "Write a letter to your manager. In your letter:", "b": ["Describe the complaints that have been made.", "Say why the reception area is important.", "Suggest how the reception area could be improved."], "to": "Your manager", "subj": null, "extra": "IELTS-style letter: the original task asks for at least 150 words and no addresses. Begin your letter: “Dear ……,”"}, {"g": "request", "title": "Internship Program", "sit": "You are a university student who recently attended a career fair on campus. You met Ms. Anderson from a company where you are very interested in applying for an internship. You want to follow up with her about the internship program.", "who": "Write an email to Ms. Anderson. In your email, do the following:", "b": ["Reiterate your interest in the company and your intention to apply for the internship program.", "Describe your relevant skills and experiences.", "Ask for details about the application process and position."], "to": "Ms. Anderson", "subj": "Inquiry About Internship Program", "extra": null}, {"g": "request", "title": "Course Information", "sit": "You are a student starting a new semester, and you would like some additional information about a course you are interested in that is taught by Dr. Adams. You want to ensure that the course is suitable for you.", "who": "Write an email to Dr. Adams. In your email, do the following:", "b": ["Explain why you are interested in the course.", "Ask for the additional information you would like to have about the course.", "Thank Dr. Adams for taking the time to respond."], "to": "Dr. Adams", "subj": "Request for additional course information", "extra": null}, {"g": "request", "title": "Conference Presentation", "sit": "You recently attended a technology conference where you met Mr. Smith, a prominent industry expert. You found his presentation helpful and informative. You want to thank Mr. Smith for his presentation and request additional information on a topic he discussed.", "who": "Write an email to Mr. Smith. In your email, do the following:", "b": ["Mention what you found useful about his presentation.", "Request additional information about one of the topics he discussed.", "Express your appreciation for his time and insights."], "to": "Mr. Smith", "subj": "Your Presentation", "extra": null}, {"g": "request", "title": "Missed Biology Lecture", "sit": "You are a student who missed an important lecture in your biology class. You need to catch up on the material and want to ask a classmate, Maria, for her notes and any key information you missed. You also want to thank her in advance for her help.", "who": "Write an email to Maria. In your email, do the following:", "b": ["Explain why you did not attend the lecture.", "Request her help and ask her if she has time available to help you catch up.", "Thank her in advance for her assistance."], "to": "Maria", "subj": "Request for Lecture Notes", "extra": null}, {"g": "request", "title": "Surprise Birthday Party", "sit": "You are planning a surprise birthday party for your classmate, Sarah. You want to hold the party for the whole class at Sarah's favorite restaurant. You need to contact the restaurant manager, Mr. Lee, to make the arrangements.", "who": "Write an email to Mr. Lee. In your email, do the following:", "b": ["Explain the purpose of the event.", "Ask about the offers and accommodations they provide for large groups.", "Inquire about any additional services they offer."], "to": "Mr. Lee", "subj": "Arrangements for Surprise Birthday Party", "extra": null}, {"g": "plans", "title": "Book Club Meeting", "sit": "You are a member of a local book club, and you are hosting the next meeting. You have selected a book and want to inform the club's members about your choice and about other meeting details.", "who": "Write an email to the members of the book club. In your email, do the following:", "b": ["Describe the book you have chosen and why you selected it.", "Explain how this book fits with the club's interests.", "Provide details about the date, time, and location of the next meeting."], "to": "Book Club Members", "subj": "Book selection and meeting details", "extra": null}, {"g": "plans", "title": "Chemistry Study Session", "sit": "The final exam in your chemistry class is coming soon. You want to organize a study session with your classmates to prepare for the exam. You need to invite your classmates and also provide some ideas about how to make the study session effective.", "who": "Write an email to your classmates. In your email, do the following:", "b": ["Invite them to join the study session.", "Suggest a time and place for the meeting.", "Provide some suggestions for an effective study session."], "to": "Chemistry Class", "subj": "Let's study for the final exam", "extra": null}, {"g": "plans", "title": "Summer Trip to Europe", "sit": "You and your friend, John, are planning a trip to Europe this summer. You have done some research and found some interesting destinations and activities that you would like to include in your itinerary. You want to share your ideas with John and get his opinion.", "who": "Write an email to John. In your email, do the following:", "b": ["Describe the destinations you have researched.", "Explain why you think these destinations would be enjoyable.", "Ask for his opinion on the suggested itinerary and any additional ideas he might have."], "to": "John", "subj": null, "extra": null}, {"g": "advice", "title": "A Friend Under Stress", "sit": "Your friend, Alex, has been feeling overwhelmed with university assignments. You have noticed that he is struggling to keep up with his workload and is not taking proper care of his health. You want to offer some helpful advice.", "who": "In your email, do the following:", "b": ["Describe to Alex what you have recently noticed about him.", "Explain why it is important to maintain good health.", "Suggest some specific strategies Alex can use to manage his stress and workload."], "to": "Alex", "subj": null, "extra": null}, {"g": "advice", "title": "Settling into a New City", "sit": "Your friend Emma has recently moved to a new city and is feeling a bit overwhelmed. She has reached out to you for advice on how to adjust to her new environment and make new friends. You have lived in several cities before, and you have experience with finding ways to settle into new places.", "who": "Write an email to Emma. In your email, do the following:", "b": ["Describe how you adjusted to a new city.", "Give Emma suggestions on how she can make new friends.", "Offer different ways to help her if she needs more advice."], "to": "Emma", "subj": null, "extra": null}]};
+const G = DATA.groups, T = DATA.tasks;
+const LIMIT = 7*60;
+const ORDER = []; G.forEach(g=>T.forEach((t,i)=>{ if(t.g===g[0]) ORDER.push(i); }));
+const KEY='email-practice-state';
+let S={}; // i -> {text, left, started, unlocked}
+try{ S=JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ S={}; }
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
+function st(i){ return S[i]||(S[i]={text:'',left:LIMIT,started:false,unlocked:false}); }
+const $=id=>document.getElementById(id);
+const esc=t=>String(t).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const words=t=>(t.trim().match(/\S+/g)||[]).length;
+let hideTime=false, hideWC=false, curPos=-1;
+const app=$('app');
+
+function status(i){
+  const s=S[i]; if(!s||(!s.text.trim()&&!s.started)) return `<span class="pill new">7 min</span>`;
+  const w=words(s.text);
+  if(s.left<=0) return `<span class="pill done">Done · ${w} words</span>`;
+  return `<span class="pill draft">Draft · ${w} words</span>`;
+}
+function renderIndex(){
+  curPos=-1; $('subbar').hidden=true;
+  ['prevBtn','nextBtn','idxBtn'].forEach(id=>$(id).hidden=true);
+  const done=ORDER.filter(i=>S[i]&&S[i].left<=0).length;
+  const written=ORDER.filter(i=>S[i]&&S[i].text.trim()).length;
+  let h=`<div class="hero"><div><h1>Write an Email</h1>
+  <p>${T.length} email tasks grouped by purpose. Open a task, press <b>Start</b>, and write for 7 minutes, the same time you get on the test. Your drafts stay saved in this browser.</p></div>
+  <div class="tally"><div><b>${written}/${T.length}</b><span>started</span></div><div><b>${done}</b><span>finished</span></div></div></div>
+  <nav class="jump" aria-label="Email types">${G.map(g=>`<a href="#type-${g[0]}">${g[1]}</a>`).join('')}</nav>`;
+  G.forEach(g=>{
+    const idx=ORDER.filter(i=>T[i].g===g[0]);
+    h+=`<section class="group" id="type-${g[0]}"><div class="ghead"><h2>${g[1]}</h2><span class="gd">${g[2]}</span><span class="gc">${idx.length} tasks</span></div><div class="cards">`;
+    idx.forEach(i=>{ const t=T[i];
+      h+=`<button class="card" type="button" data-i="${i}"><span class="k">To: ${esc(t.to)}</span><span class="t">${esc(t.title)}</span><span class="m"><span>Task ${ORDER.indexOf(i)+1}</span>${status(i)}</span></button>`;
+    });
+    h+=`</div></section>`;
+  });
+  app.innerHTML=h;
+  app.querySelectorAll('.card').forEach(b=>b.onclick=()=>{ location.hash='task-'+(ORDER.indexOf(+b.dataset.i)+1); });
+}
+function renderTask(pos){
+  curPos=pos; const i=ORDER[pos], t=T[i], s=st(i), g=G.find(x=>x[0]===t.g);
+  $('subbar').hidden=false; ['prevBtn','nextBtn','idxBtn'].forEach(id=>$(id).hidden=false);
+  $('prevBtn').disabled=pos===0; $('nextBtn').disabled=pos===ORDER.length-1;
+  $('qn').textContent=`Task ${pos+1} of ${ORDER.length}`;
+  const locked = s.left<=0 && !s.unlocked;
+  const prompt=`<div class="prompt"><p>${esc(t.sit)}</p><p><b>${esc(t.who)}</b></p><ul>${t.b.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p>Write as much as you can and in complete sentences.</p>${t.extra?`<p class="note">${esc(t.extra)}</p>`:''}</div>`;
+  let resp=`<div class="resp"><h3>Your Response:</h3><p class="meta">To: ${esc(t.to)}</p>${t.subj?`<p class="meta">Subject: ${esc(t.subj)}</p>`:''}`;
+  if(!s.started){
+    resp+=`<div class="fb info startcard"><span>You will have <b>7 minutes</b>. The timer starts when you press Start.</span><button class="sbtn fill" type="button" id="start">Start</button></div></div>`;
+  } else {
+    resp+=`<div class="tools"><button class="tbtn" type="button" id="copy">Copy</button><button class="tbtn" type="button" id="restart">Restart</button>
+      <span class="wc"><button class="link" type="button" id="hideWC">${hideWC?'Show Word Count':'Hide Word Count'}</button><span id="wc"></span></span></div>
+      <textarea id="ta" spellcheck="false" aria-label="Your email" ${locked?'readonly':''}>${esc(s.text)}</textarea><div id="tu"></div></div>`;
+  }
+  app.innerHTML=`<div class="crumbs">${g[1]} · ${esc(t.title)}</div><h1 class="instr">Write an Email</h1><div class="wgrid"><section>${prompt}</section><section>${resp}</section></div>`;
+  if(!s.started){ $('start').onclick=()=>{ s.started=true; save(); renderTask(pos); const ta=$('ta'); if(ta) ta.focus(); }; tickShow(); return; }
+  const ta=$('ta');
+  const upd=()=>{ $('wc').textContent = hideWC ? '' : words(ta.value); };
+  ta.addEventListener('input',()=>{ s.text=ta.value; upd(); save(); });
+  upd(); showTimesUp(i); tickShow();
+  $('hideWC').onclick=()=>{ hideWC=!hideWC; $('hideWC').textContent=hideWC?'Show Word Count':'Hide Word Count'; upd(); };
+  $('copy').onclick=()=>{
+    const head=`To: ${t.to}\n${t.subj?`Subject: ${t.subj}\n`:''}\n`;
+    const done=()=>{ $('copy').textContent='Copied'; setTimeout(()=>{ const c=$('copy'); if(c) c.textContent='Copy'; },1500); };
+    try{ navigator.clipboard.writeText(head+ta.value).then(done,()=>{ ta.focus(); ta.select(); }); }catch(e){ ta.focus(); ta.select(); }
+  };
+  const rb=$('restart');
+  rb.onclick=()=>{
+    if(!rb.dataset.armed){ rb.dataset.armed='1'; rb.textContent='Tap again: clear text & timer'; rb.classList.add('on'); return; }
+    S[i]={text:'',left:LIMIT,started:false,unlocked:false}; save(); renderTask(pos);
+  };
+}
+function showTimesUp(i){
+  const box=$('tu'); if(!box) return; const s=st(i);
+  if(s.left<=0 && !s.unlocked){
+    box.innerHTML=`<div class="fb bad"><span><b>Time is up.</b> ${words(s.text)} words. Your text is saved.</span><button class="sbtn" type="button" id="unlock">Keep writing</button></div>`;
+    $('unlock').onclick=()=>{ s.unlocked=true; save(); renderTask(curPos); };
+  } else box.innerHTML='';
+}
+function fmt(x){ return String(Math.floor(x/60)).padStart(2,'0')+':'+String(x%60).padStart(2,'0'); }
+function tickShow(){
+  if(curPos<0) return; const s=st(ORDER[curPos]);
+  $('timer').textContent = hideTime ? '' : '00:'+fmt(Math.max(0,s.left));
+  $('timer').classList.toggle('low', s.left<=60);
+}
+setInterval(()=>{
+  if(curPos<0||document.hidden) return; const i=ORDER[curPos], s=st(i);
+  if(s.started && s.left>0){
+    s.left--; if(s.left%5===0) save();
+    if(s.left===0){ save(); const ta=$('ta'); if(ta&&!s.unlocked) ta.readOnly=true; showTimesUp(i); }
+  }
+  tickShow();
+},1000);
+$('hideTime').onclick=()=>{ hideTime=!hideTime; $('hideTime').textContent=hideTime?'Show Time':'Hide Time'; tickShow(); };
+$('idxBtn').onclick=()=>{ location.hash = curPos>=0 ? 'type-'+T[ORDER[curPos]].g : ''; };
+$('prevBtn').onclick=()=>{ if(curPos>0) location.hash='task-'+curPos; };
+$('nextBtn').onclick=()=>{ if(curPos<ORDER.length-1) location.hash='task-'+(curPos+2); };
+function route(){
+  const m=location.hash.match(/^#task-(\d+)$/);
+  if(m && +m[1]>=1 && +m[1]<=ORDER.length){ renderTask(+m[1]-1); window.scrollTo(0,0); return; }
+  renderIndex();
+  if(/^#type-/.test(location.hash)){ const el=document.querySelector(location.hash); if(el) el.scrollIntoView(); } else window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',route);
+route();
+</script>
+
+</body>
+</html>

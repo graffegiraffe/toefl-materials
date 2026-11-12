@@ -1,0 +1,28 @@
+:root{
+  --teal:#2f6b70; --teal-dark:#24575b; --teal-soft:#e4efef;
+  --bg:#f6f8f8; --surface:#fff; --fg:#1d2524; --muted:#5d6967; --rule:#d5dddc;
+  --f:"Open Sans","Segoe UI",Arial,sans-serif; --serif:"Merriweather",Georgia,serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font:16px/1.55 var(--f)}
+a{color:var(--teal)}
+.bar{background:var(--teal);color:#fff}
+.bar .in{max-width:960px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.bar a{color:#fff;text-decoration:none;font-weight:700;letter-spacing:.02em}
+.bar .crumb{opacity:.85;font-weight:400}
+main{max-width:960px;margin:0 auto;padding:32px 16px 64px}
+.hero{background:var(--teal-dark);color:#fff;padding:56px 16px 48px;text-align:center}
+.hero .badge{display:inline-block;background:rgba(255,255,255,.14);border-radius:999px;padding:4px 14px;font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+.hero h1{font-family:var(--serif);font-size:clamp(26px,5vw,40px);line-height:1.25;margin:16px auto 12px;max-width:720px}
+.hero p{margin:0 auto;max-width:560px;opacity:.9}
+h2{font-family:var(--serif);font-size:24px;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.card{display:block;background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:20px;text-decoration:none;color:inherit;transition:border-color .15s,box-shadow .15s,transform .15s}
+.card:hover,.card:focus-visible{border-color:var(--teal);box-shadow:0 6px 18px rgba(36,87,91,.12);transform:translateY(-2px);outline:none}
+.card .ico{font-size:28px;line-height:1}
+.card h3{margin:10px 0 6px;font-size:18px;color:var(--teal-dark)}
+.card p{margin:0;color:var(--muted);font-size:14px}
+.card .meta{margin-top:12px;font-size:13px;font-weight:600;color:var(--teal)}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:24px 16px 40px}
