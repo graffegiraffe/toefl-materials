@@ -1,5 +1,5 @@
-# Материалы лучшего репетитора по мнению учеников
+# Materials from the Best Tutor, as Rated by Students
 
-Тренажёры для подготовки к TOEFL, сгруппированные по разделам: Reading, Writing, Speaking и полный пробный экзамен.
+TOEFL practice tasks organized by section: Reading, Writing, Speaking, and a full mock exam.
 
-Сайт статический: откройте `index.html` или опубликуйте через GitHub Pages (Settings → Pages → Deploy from branch → `main` / root).
+Live site: https://graffegiraffe.github.io/toefl-materials/
